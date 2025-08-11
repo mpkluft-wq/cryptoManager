@@ -1,0 +1,4 @@
+transaction_list:
+  path: /transaction/list
+  methods: [GET, POST]
+  controller : App\Shared\Infrastructure\Controller\Transaction\GetAllController

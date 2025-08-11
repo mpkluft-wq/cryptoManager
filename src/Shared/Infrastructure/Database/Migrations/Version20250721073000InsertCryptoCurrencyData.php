@@ -43,15 +43,22 @@ final class Version20250721073000InsertCryptoCurrencyData extends AbstractMigrat
                 (18, 'SHIB', 'Shiba Inu', false, 18, NULL, 2020, 'https://shibatoken.com', 'https://etherscan.io', 'ethereum', 'erc-20', '0x95aD...SHIB', CURRENT_TIMESTAMP, NULL),
                 (19, 'TRX', 'Tron', false, 6, NULL, 2017, 'https://tron.network', 'https://tronscan.io', 'tron', NULL, NULL, CURRENT_TIMESTAMP, NULL),
                 (20, 'LINK', 'Chainlink', false, 18, NULL, 2017, 'https://chain.link', 'https://etherscan.io', 'ethereum', 'erc-20', '0x514910...LINK', CURRENT_TIMESTAMP, NULL),
-                (21, 'XRP', 'Ripple', false, 6, NULL, 2012, 'https://ripple.com/xrp', 'https://xrpscan.com', 'ripple', NULL, NULL, CURRENT_TIMESTAMP, NULL);
+                (21, 'XRP', 'Ripple', false, 6, NULL, 2012, 'https://ripple.com/xrp', 'https://xrpscan.com', 'ripple', NULL, NULL, CURRENT_TIMESTAMP, NULL),
+                (22, 'STARK', 'Starknet', false, 18, NULL, 2022, 'https://www.starknet.io', 'https://starkscan.co', 'starknet', NULL, NULL, CURRENT_TIMESTAMP, NULL),
+                (23, 'ARB', 'Arbitrum', false, 18, NULL, 2021, 'https://arbitrum.io', 'https://arbiscan.io', 'ethereum', 'layer2', NULL, CURRENT_TIMESTAMP, NULL),
+                (24, 'ATOM', 'Cosmos', false, 6, NULL, 2019, 'https://cosmos.network', 'https://www.mintscan.io/cosmos', 'cosmos', NULL, NULL, CURRENT_TIMESTAMP, NULL),
+                (25, 'JUP', 'Jupiter', false, 6, NULL, 2023, 'https://jup.ag', 'https://solscan.io', 'solana', NULL, NULL, CURRENT_TIMESTAMP, NULL),
+                (26, 'APT', 'Aptos', false, 8, NULL, 2022, 'https://aptoslabs.com', 'https://explorer.aptoslabs.com', 'aptos', NULL, NULL, CURRENT_TIMESTAMP, NULL),
+                (27, 'OP', 'Optimism', false, 18, NULL, 2021, 'https://www.optimism.io', 'https://optimistic.etherscan.io', 'ethereum', 'layer2', NULL, CURRENT_TIMESTAMP, NULL);
         ");
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql("DELETE FROM cryptocurrency WHERE symbol IN (
+        $this->addSql("DELETE FROM crypto_currency WHERE symbol IN (
             'BTC','ETH','TON','BUILD','MEMHASH','SOL','MAJOR','MANTLE','MELANIA','NOT','PX',
-            'USDT','USDC','BNB','ADA','AVAX','DOGE','SHIB','TRX','LINK','XRP'
+            'USDT','USDC','BNB','ADA','AVAX','DOGE','SHIB','TRX','LINK','XRP',
+            'STARK','ARB','ATOM','JUP','APT','OP'
         )");
     }
 }

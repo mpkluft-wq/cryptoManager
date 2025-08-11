@@ -2,11 +2,11 @@
 
 namespace App\Shared\Infrastructure\Database\ORM;
 
-use App\Infrastructure\Exception\InfrastructureGenericException;
-use App\Infrastructure\Exception\PassableException;
-use App\Infrastructure\Exception\VendorGenericException;
+use App\Shared\Infrastructure\Exception\InfrastructureGenericException;
+use App\Shared\Infrastructure\Exception\PassableException;
+use App\Shared\Infrastructure\Exception\VendorGenericException;
 use Doctrine\DBAL\Exception as DBALException;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -17,12 +17,12 @@ use Doctrine\ORM\EntityRepository;
  */
 abstract class BaseRepository extends AbstractRepository
 {
-    protected EntityManager $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     /** @phpstan-ignore-next-line */
     protected EntityRepository $repository;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         /**
          * @var EntityRepository $repository

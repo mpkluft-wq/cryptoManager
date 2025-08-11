@@ -1,0 +1,23 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                      https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Transaction\Domain\Entity\Transaction" table="transaction">
+        <id name="id" type="string" column="id">
+            <generator strategy="NONE"/>
+        </id>
+
+        <field name="timestamp" column="timestamp" type="datetime_immutable" nullable="false"/>
+        <field name="type" column="type" type="string" length="20" nullable="false" enum-type="App\Transaction\Domain\Enumeration\TransactionType"/>
+        <field name="exchangeId" column="exchange_id" type="string" length="255" nullable="false"/>
+        <field name="tradingBotId" column="trading_bot_id" type="string" length="255" nullable="true"/>
+        <field name="assetSymbol" column="asset_symbol" type="string" length="20" nullable="false"/>
+        <field name="quantity" column="quantity" type="float" nullable="false"/>
+        <field name="pricePerUnit" column="price_per_unit" type="float" nullable="false"/>
+        <field name="totalAmount" column="total_amount" type="float" nullable="false"/>
+        <field name="currency" column="currency" type="string" length="20" nullable="false"/>
+        <field name="externalTransactionId" column="external_transaction_id" type="string" length="255" nullable="true"/>
+        <field name="notes" column="notes" type="text" nullable="true"/>
+    </entity>
+</doctrine-mapping>

@@ -40,6 +40,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/CryptoCurrency/Infrastructure/Database/ORM'
                 prefix: 'App\CryptoCurrency\Domain\Entity'
                 alias: CryptoCurrency
+            Transaction:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Transaction/Infrastructure/Database/ORM'
+                prefix: 'App\Transaction\Domain\Entity'
+                alias: Transaction
 
 #when@test:
 #    doctrine:

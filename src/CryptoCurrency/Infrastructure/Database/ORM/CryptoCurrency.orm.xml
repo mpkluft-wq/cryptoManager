@@ -33,7 +33,7 @@
         <field name="network" column="network" type="string" length="50" nullable="true"/>
         <field name="contractAddress" column="contract_address" type="string" length="255" nullable="true"/>
 
-        <field name="createdAt" column="created_at" type="datetime" nullable="false"/>
-        <field name="updatedAt" column="updated_at" type="datetime" nullable="true"/>
+        <field name="createdAt" column="created_at" type="datetime_immutable" nullable="false"/>
+        <field name="updatedAt" column="updated_at" type="datetime_immutable" nullable="true"/>
     </entity>
 </doctrine-mapping>
