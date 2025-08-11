@@ -1,0 +1,26 @@
+#controllers:
+#    resource:
+#        path: ../src/Shared/Infrastructure/Controller/
+#        namespace: App\Shared\Infrastructure\Controller
+#    type: attribute
+base_route:
+    path:  /
+    methods: GET
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
+    defaults:
+        route: dashboard_main
+        # make a permanent redirection...
+        permanent: true
+        # ...and keep the original query string parameters
+        keepQueryParams: true
+
+dashboard_main:
+    path:  /{_locale}
+    methods: GET
+    controller: App\Shared\Infrastructure\Controller\DashboardController
+    requirements:
+        _locale: ru|en
+
+routes_from_yaml:
+    resource: '../config/routing/*.yaml'
+    type: glob

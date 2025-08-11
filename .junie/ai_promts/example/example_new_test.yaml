@@ -1,0 +1,13 @@
+include:
+    - '@TestBundle/Fixture/Common/UniSender/UniGridBundle/config.yaml'
+    - '@TestBundle/Fixture/Common/UniSender/UniGridBundle/lang.yaml'
+    - '@TestBundle/Fixture/Common/User/user.yaml'
+
+User\Entity\User:
+    user_11_classification (extends user):
+        id: 11
+        email: example@unisender.com
+        staffRole: null
+        apiKey: <apiKey(@self->id)>
+        apiMode: <constant(User\Entity\User::API_MODE_ON)>
+        startingSteps: <(new UniSender\UniGridBundle\ValueObject\UserStartingSteps('added_domain,checked_domain,first_email_sent,payed_tariff,all_done'))>

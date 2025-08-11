@@ -1,0 +1,4 @@
+crypto_currency_list:
+  path: /crypto-currency/list
+  methods: [GET, POST]
+  controller : App\Shared\Infrastructure\Controller\CryptoCurrency\GetAllController

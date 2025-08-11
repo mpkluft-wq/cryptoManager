@@ -1,0 +1,4 @@
+exchange_list:
+  path: /exchange/list
+  methods: [GET, POST]
+  controller : App\Shared\Infrastructure\Controller\Exchange\GetAllController

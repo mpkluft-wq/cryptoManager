@@ -1,0 +1,176 @@
+# Инструкция по созданию ORM XML маппинга
+
+## Назначение
+Данная инструкция предназначена для создания XML-файлов маппинга объектно-реляционного отображения (ORM) в проекте Symfony. XML-маппинг используется для связывания PHP-классов сущностей с таблицами базы данных без необходимости добавления аннотаций в сами классы.
+
+## Необходимые данные для создания XML-маппинга
+1. Полное имя класса сущности (включая namespace)
+2. Имя таблицы в базе данных
+3. Список полей сущности с их типами данных
+4. Информация о первичном ключе
+5. Информация о связях с другими сущностями (если есть)
+6. Информация об индексах (если нужны)
+7. Информация о жизненном цикле сущности (если нужны колбэки)
+
+## Структура директорий
+XML-файлы маппинга должны располагаться в директории `config/doctrine`, в поддиректориях, соответствующих структуре namespace сущностей.
+
+## Формат XML-файла маппинга
+Файл должен иметь расширение `.orm.xml` и соответствовать XSD-схеме Doctrine.
+
+## Шаблон XML-файла маппинга
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="ПолныйПутьКСущности\ИмяКласса" table="имя_таблицы" repository-class="ПолныйПутьКРепозиторию\ИмяРепозитория">
+        
+        <!-- Первичный ключ -->
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        
+        <!-- Поля сущности -->
+        <field name="имяПоля1" type="тип_данных" column="имя_столбца1" nullable="true|false" unique="true|false" />
+        <field name="имяПоля2" type="тип_данных" column="имя_столбца2" nullable="true|false" />
+        
+        <!-- Связи с другими сущностями -->
+        <!-- Many-To-One -->
+        <many-to-one field="имяПоля" target-entity="ПолныйПутьКСущности\ИмяКласса">
+            <join-column name="имя_столбца_внешнего_ключа" referenced-column-name="id" nullable="true|false" />
+        </many-to-one>
+        
+        <!-- One-To-Many -->
+        <one-to-many field="имяПоля" target-entity="ПолныйПутьКСущности\ИмяКласса" mapped-by="имяПоляВЦелевойСущности" />
+        
+        <!-- Many-To-Many -->
+        <many-to-many field="имяПоля" target-entity="ПолныйПутьКСущности\ИмяКласса">
+            <join-table name="имя_связующей_таблицы">
+                <join-column name="имя_столбца_текущей_сущности" referenced-column-name="id" />
+                <inverse-join-column name="имя_столбца_целевой_сущности" referenced-column-name="id" />
+            </join-table>
+        </many-to-many>
+        
+        <!-- Индексы -->
+        <indexes>
+            <index name="имя_индекса" columns="имя_столбца1,имя_столбца2" />
+        </indexes>
+        
+        <!-- Уникальные ограничения -->
+        <unique-constraints>
+            <unique-constraint name="имя_ограничения" columns="имя_столбца1,имя_столбца2" />
+        </unique-constraints>
+        
+        <!-- Колбэки жизненного цикла -->
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="имяМетода" />
+            <lifecycle-callback type="preUpdate" method="имяМетода" />
+        </lifecycle-callbacks>
+        
+    </entity>
+</doctrine-mapping>
+```
+
+## Типы данных Doctrine
+- `string`: для VARCHAR, CHAR
+- `text`: для TEXT
+- `integer`: для INT
+- `smallint`: для SMALLINT
+- `bigint`: для BIGINT
+- `boolean`: для BOOLEAN
+- `decimal`: для DECIMAL
+- `float`: для FLOAT
+- `datetime`: для DATETIME !если это новая сущность, то всегда генерируй dateTimeImmutable
+- `date`: для DATE !если это новая сущность, то всегда генерируй dateTimeImmutable
+- `time`: для TIME !если это новая сущность, то всегда генерируй dateTimeImmutable
+- `array`: для сериализованных массивов
+- `json`: для JSON данных
+- `object`: для сериализованных объектов
+- `guid`: для GUID/UUID
+
+## Стратегии генерации ID
+- `AUTO`: автоматический выбор наилучшей стратегии
+- `IDENTITY`: использование AUTO_INCREMENT
+- `SEQUENCE`: использование последовательностей (для PostgreSQL)
+- `TABLE`: использование специальной таблицы для генерации ID
+- `NONE`: ID не генерируется автоматически
+
+## Пример XML-маппинга для сущности User
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Entity\User" table="users" repository-class="App\Repository\UserRepository">
+        
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        
+        <field name="email" type="string" column="email" length="180" unique="true" />
+        <field name="roles" type="json" column="roles" />
+        <field name="password" type="string" column="password" length="255" />
+        <field name="firstName" type="string" column="first_name" length="100" nullable="true" />
+        <field name="lastName" type="string" column="last_name" length="100" nullable="true" />
+        <field name="createdAt" type="datetime" column="created_at" />
+        <field name="updatedAt" type="datetime" column="updated_at" nullable="true" />
+        
+        <one-to-many field="posts" target-entity="App\Entity\Post" mapped-by="author" />
+        
+        <indexes>
+            <index name="idx_user_name" columns="first_name,last_name" />
+        </indexes>
+        
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAtValue" />
+            <lifecycle-callback type="preUpdate" method="setUpdatedAtValue" />
+        </lifecycle-callbacks>
+        
+    </entity>
+</doctrine-mapping>
+```
+
+## Требования и ограничения
+1. Имя XML-файла должно соответствовать имени класса сущности
+2. Все XML-файлы должны быть валидны согласно XSD-схеме Doctrine
+3. Имена полей в XML должны точно соответствовать именам свойств в классе сущности
+4. Типы данных должны соответствовать типам, поддерживаемым Doctrine
+5. При изменении структуры базы данных необходимо создать соответствующую миграцию
+6. Связи между сущностями должны быть корректно настроены с обеих сторон
+
+## Процесс создания XML-маппинга
+1. Создать класс сущности в соответствующем namespace
+2. Создать XML-файл маппинга в директории config/doctrine
+3. Настроить маппинг согласно структуре таблицы в базе данных
+4. Проверить валидность XML-файла
+5. Создать миграцию для обновления структуры базы данных (если необходимо)
+6. Обновить схему базы данных
+
+## Проверка корректности маппинга
+Для проверки корректности маппинга можно использовать команду:
+```
+php bin/console doctrine:schema:validate
+```
+
+## Генерация SQL для обновления схемы
+Для генерации SQL-запросов для обновления схемы базы данных:
+```
+php bin/console doctrine:schema:update --dump-sql
+```
+
+## Обновление схемы базы данных
+Для применения изменений схемы к базе данных:
+```
+php bin/console doctrine:schema:update --force
+```
+
+## Дополнительная информация
+Для более подробной информации о XML-маппинге в Doctrine ORM обратитесь к официальной документации:
+https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/xml-mapping.html

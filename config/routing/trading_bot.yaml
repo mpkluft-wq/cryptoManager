@@ -1,0 +1,4 @@
+trading_bot_list:
+  path: /trading-bot/list
+  methods: [GET, POST]
+  controller : App\Shared\Infrastructure\Controller\TradingBot\GetAllController

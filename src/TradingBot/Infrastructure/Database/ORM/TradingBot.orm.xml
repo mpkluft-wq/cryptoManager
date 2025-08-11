@@ -1,0 +1,37 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\TradingBot\Domain\Entity\TradingBot" table="trading_bot">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </id>
+        <field name="botName" column="bot_name" nullable="false"/>
+        <field name="exchangeId" column="exchange_id" type="smallint" nullable="false"/>
+        <field name="tradingPairBaseId" column="trading_pair_base_id" type="smallint" nullable="false"/>
+        <field name="tradingPairQuoteId" column="trading_pair_quote_id" type="smallint" nullable="false"/>
+        <field name="rangePriceFrom" column="range_price_from" type="decimal" nullable="false" precision="13" scale="5">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="rangePriceTo" column="range_price_to" type="decimal" nullable="false" precision="13" scale="5">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="gridCount" column="grid_count" type="smallint" nullable="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="step" column="step" type="decimal" nullable="false" precision="10" scale="5">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+    </entity>
+</doctrine-mapping>

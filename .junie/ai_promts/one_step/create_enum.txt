@@ -1,0 +1,119 @@
+# Инструкция по созданию Enum
+
+## Назначение
+Данная инструкция предназначена для создания перечислений (enum) в проекте. Enum представляет собой специальный тип данных, который позволяет определить набор именованных констант.
+
+## Необходимые данные для создания Enum
+1. Полное имя класса enum (включая namespace)
+2. Список возможных значений enum
+3. Тип enum (string, int или без типа)
+
+## Структура директорий
+- Enum-классы должны располагаться в директории `src/{Module}/Enumeration/`
+
+## Процесс создания нового Enum
+
+### 1. Создание PHP-класса Enum
+Создайте PHP-класс в соответствующем namespace:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Module\Enumeration;
+
+enum MyEnum: string
+{
+    case FIRST_VALUE = 'first_value';
+    case SECOND_VALUE = 'second_value';
+    case THIRD_VALUE = 'third_value';
+}
+```
+
+## Требования и ограничения
+1. Имена констант (case) должны быть в UPPER_SNAKE_CASE
+2. Значения enum должны быть в нижнем регистре (lowercase)
+3. В значениях слова должны разделяться только нижним подчеркиванием (snake_case)
+4. Для строковых enum используйте `: string` после имени класса
+5. Для целочисленных enum используйте `: int` после имени класса
+6. Если тип не указан, enum будет без значений (pure enum)
+
+## Примеры
+
+### Строковый Enum (рекомендуется)
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace User\Enumeration;
+
+enum UserPurpose: string
+{
+    case MY_COMPANY = 'my_company';
+    case MY_CUSTOMERS = 'my_customers';
+    case PERSONAL_PROJECT = 'personal_project';
+    case OTHER = 'other';
+    case NOT_READY_TO_ANSWER = 'not_ready_to_answer';
+}
+```
+
+### Целочисленный Enum
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Enumeration;
+
+enum Priority: int
+{
+    case LOW = 1;
+    case MEDIUM = 2;
+    case HIGH = 3;
+    case CRITICAL = 4;
+}
+```
+
+### Enum без значений
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Enumeration;
+
+enum Status
+{
+    case PENDING;
+    case PROCESSING;
+    case COMPLETED;
+    case FAILED;
+}
+```
+
+## Использование Enum в коде
+
+### Получение значения
+```php
+$purpose = UserPurpose::MY_COMPANY;
+$value = $purpose->value; // 'my_company'
+```
+
+### Сравнение
+```php
+if ($purpose === UserPurpose::MY_COMPANY) {
+    // ...
+}
+```
+
+### Создание из значения
+```php
+$purpose = UserPurpose::from('my_company'); // Выбросит исключение, если значение не существует
+$purpose = UserPurpose::tryFrom('my_company'); // Вернет null, если значение не существует
+```
+
+## Дополнительная информация
+Для более подробной информации об Enum в PHP обратитесь к официальной документации:
+https://www.php.net/manual/en/language.enumerations.php

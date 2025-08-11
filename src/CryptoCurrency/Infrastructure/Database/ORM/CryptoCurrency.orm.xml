@@ -1,0 +1,39 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                      https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\CryptoCurrency\Domain\Entity\CryptoCurrency" table="crypto_currency">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </id>
+
+        <field name="symbol" column="symbol" type="string" length="20" nullable="false"/>
+        <field name="name" column="name" type="string" length="255" nullable="false"/>
+        <field name="isStablecoin" column="is_stablecoin" type="boolean" nullable="false"/>
+        <field name="decimals" column="decimals" type="integer" nullable="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+
+        <field name="logoPath" column="logo_path" type="string" length="255" nullable="true"/>
+        <field name="launchYear" column="launch_year" type="integer" nullable="true">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+
+        <field name="projectUrl" column="project_url" type="string" length="255" nullable="true"/>
+        <field name="explorerUrl" column="explorer_url" type="string" length="255" nullable="true"/>
+        <field name="blockchainType" column="blockchain_type" type="string" length="50" nullable="false"/>
+        <field name="network" column="network" type="string" length="50" nullable="true"/>
+        <field name="contractAddress" column="contract_address" type="string" length="255" nullable="true"/>
+
+        <field name="createdAt" column="created_at" type="datetime" nullable="false"/>
+        <field name="updatedAt" column="updated_at" type="datetime" nullable="true"/>
+    </entity>
+</doctrine-mapping>

@@ -1,0 +1,204 @@
+# Инструкция по созданию/обновлению/редактированию entity
+
+## Назначение
+Данная инструкция предназначена для создания, обновления и редактирования сущностей (entities) в проекте. Сущности представляют собой PHP-классы, которые отображаются на таблицы базы данных с помощью ORM XML маппинга Doctrine.
+
+## Необходимые данные для работы с сущностями
+1. Полное имя класса сущности (включая namespace)
+2. Имя таблицы в базе данных
+3. Список полей сущности с их типами данных
+4. Информация о первичном ключе
+5. Информация о связях с другими сущностями (если есть)
+6. Информация об индексах (если нужны)
+7. Информация о жизненном цикле сущности (если нужны колбэки)
+
+## Структура директорий
+- PHP-классы сущностей должны располагаться в директории `src/{Module}/Entity/`
+- XML-файлы маппинга должны располагаться в директории `src/{Module}/config/doctrine/` и иметь расширение `.orm.xml`
+
+## Процесс создания новой сущности
+
+### 1. Создание PHP-класса сущности
+Создайте PHP-класс в соответствующем namespace, который должен:
+- Реализовывать интерфейс `EntityInterface` (или `App\Infrastructure\Persistence\Doctrine\ORM\EntityInterface` для общих сущностей)
+- Иметь приватные свойства для всех полей таблицы
+- Иметь геттеры и сеттеры для всех свойств
+- Иметь конструктор для инициализации обязательных свойств
+
+Пример:
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Module\Entity;
+
+use App\Infrastructure\Persistence\Doctrine\ORM\EntityInterface;
+
+class MyEntity implements EntityInterface
+{
+    private ?int $id = null;
+    private string $name;
+    private \DateTimeImmutable $createdAt;
+    
+    public function __construct(string $name)
+    {
+        $this->name = $name;
+        $this->createdAt = new \DateTimeImmutable();
+    }
+    
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+    
+    public function getName(): string
+    {
+        return $this->name;
+    }
+    
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+    
+    public function getCreatedAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+}
+```
+
+### 2. Создание XML-маппинга
+Создайте XML-файл маппинга в директории `src/{Module}/config/doctrine/` с именем, соответствующим имени класса сущности (например, `MyEntity.orm.xml`):
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" 
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping 
+                  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Module\Entity\MyEntity" table="my_entity_table">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        
+        <field name="name" column="name" type="string" length="255"/>
+        <field name="createdAt" column="created_at" type="datetime_immutable"/>
+        
+        <!-- Индексы (если нужны) -->
+        <indexes>
+            <index name="idx_name" columns="name"/>
+        </indexes>
+        
+        <!-- Связи с другими сущностями (если нужны) -->
+        <!-- ... -->
+        
+        <!-- Колбэки жизненного цикла (если нужны) -->
+        <!-- ... -->
+    </entity>
+</doctrine-mapping>
+```
+
+### 3. Создание репозитория для сущности
+Для работы с сущностью создайте репозиторий, который должен:
+- Наследоваться от `AbstractWriteOrmEntityRepository` для операций записи
+- Реализовывать соответствующий интерфейс репозитория
+- Реализовывать метод `getFQDN()`, возвращающий полное имя класса сущности
+
+Пример:
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Module\Infrastructure\Repository\MyEntity\ORM;
+
+use App\Infrastructure\Persistence\Doctrine\ORM\AbstractWriteOrmEntityRepository;
+use Module\Entity\MyEntity;
+use Module\Infrastructure\Repository\MyEntity\MyEntityWriteRepositoryInterface;
+
+class MyEntityWriteRepository extends AbstractWriteOrmEntityRepository implements MyEntityWriteRepositoryInterface
+{
+    protected function getFQDN(): string
+    {
+        return MyEntity::class;
+    }
+    
+    public function save(MyEntity $entity): bool
+    {
+        return $this->saveEntity($entity);
+    }
+    
+    public function remove(MyEntity $entity): bool
+    {
+        return $this->removeEntity($entity);
+    }
+}
+```
+
+## Процесс обновления существующей сущности
+
+### 1. Обновление PHP-класса сущности
+- Добавьте новые приватные свойства
+- Добавьте геттеры и сеттеры для новых свойств
+- При необходимости обновите конструктор
+
+### 2. Обновление XML-маппинга
+- Добавьте новые поля в XML-маппинг
+- При необходимости обновите индексы, связи и другие элементы
+
+### 3. Создание миграции для обновления структуры базы данных
+Создайте миграцию для добавления новых полей в таблицу базы данных (см. инструкцию по созданию миграций).
+
+## Требования и ограничения
+1. Все сущности должны реализовывать соответствующий интерфейс (`EntityInterface`)
+2. Имена полей в PHP-классе должны соответствовать camelCase, а в базе данных - snake_case
+3. Для дат и времени используйте `\DateTimeImmutable` вместо `\DateTime`
+4. Для новых сущностей всегда используйте типы `datetime_immutable`, `date_immutable` и `time_immutable` в XML-маппинге
+5. Все поля должны иметь корректные типы данных в PHP и соответствующие типы в XML-маппинге
+6. Для UUID используйте тип `uuid` в XML-маппинге и `UuidInterface` в PHP
+7. Для связей между сущностями правильно настраивайте обе стороны связи
+
+## Проверка корректности
+После создания или обновления сущности:
+1. Проверьте валидность XML-маппинга:
+```
+php bin/console doctrine:schema:validate
+```
+
+2. Сгенерируйте SQL для обновления схемы:
+```
+php bin/console doctrine:schema:update --dump-sql
+```
+
+3. Создайте и примените миграцию для обновления схемы базы данных
+
+## Типы данных Doctrine
+- `string`: для VARCHAR, CHAR
+- `text`: для TEXT
+- `integer`: для INT
+- `smallint`: для SMALLINT
+- `bigint`: для BIGINT
+- `boolean`: для BOOLEAN
+- `decimal`: для DECIMAL
+- `float`: для FLOAT
+- `datetime_immutable`: для DATETIME
+- `date_immutable`: для DATE
+- `time_immutable`: для TIME
+- `array`: для сериализованных массивов
+- `json`: для JSON данных
+- `object`: для сериализованных объектов
+- `uuid`: для GUID/UUID
+
+## Стратегии генерации ID
+- `AUTO`: автоматический выбор наилучшей стратегии
+- `IDENTITY`: использование AUTO_INCREMENT
+- `SEQUENCE`: использование последовательностей (для PostgreSQL)
+- `TABLE`: использование специальной таблицы для генерации ID
+- `NONE`: ID не генерируется автоматически
+
+## Дополнительная информация
+Для более подробной информации о XML-маппинге в Doctrine ORM обратитесь к официальной документации:
+https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/xml-mapping.html

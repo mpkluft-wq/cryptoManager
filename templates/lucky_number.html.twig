@@ -1,0 +1,59 @@
+{% extends "default_layout/main_layout.html.twig" %}
+
+{% block body %}
+    Кол-во торгуемых денег: {{ amount }}
+    </br>
+    Кол-во сеток: {{ countGrid }}
+    </br>
+    Текущий курс одного TON в usdt: {{ currentPrice }}
+    </br>
+    Диапазон от: {{ rangePriceFrom }}
+    </br>
+    Диапазон до: {{ rangePriceTo }}
+    </br>
+    </br>
+    Текущее кол-во TON, которое смогу купить: {{ allCryptoAmount }}
+    </br>
+    Ставка в TON для покупки/продажи: {{ singleCryptoBet }}
+    </br>
+    Таблица первых выставленных ордеров на продажу. Т.е. вначале покупаются кол-во ордеров для начала торговли.
+    <table>
+        <thead>
+        <tr>
+            <th>buy</th>
+            <th>sell</th>
+            <th>amount</th>
+            <th>profit</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for firstOrder in firstOrdersToSell %}
+            <tr>
+                {% for cell in firstOrder %}
+                    <td>{{ cell }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    Таблица первых ордеров на откуп, если валюта начнет сыпаться.
+    <table>
+        <thead>
+        <tr>
+            <th>buy</th>
+            <th>sell</th>
+            <th>amount</th>
+            <th>profit</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for firstOrder in firstOrdersToBuy %}
+            <tr>
+                {% for cell in firstOrder %}
+                    <td>{{ cell }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

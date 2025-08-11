@@ -1,0 +1,12 @@
+{% extends "default_layout/main_layout.html.twig" %}
+
+{% block body %}
+    <nav>
+        <ul>
+            <li><a href="{{ path('dashboard_main') }}">🏠 Главная</a></li>
+            <li><a href="{{ path('crypto_currency_list') }}">💰 Криптовалюты</a></li>
+            <li><a href="{{ path('exchange_list') }}">🏦 Биржи</a></li>
+            <li><a href="{{ path('trading_bot_list') }}">🤖 Торговые Боты</a></li>
+        </ul>
+    </nav>
+{% endblock %}
