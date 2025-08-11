@@ -3,25 +3,27 @@
 ##################
 
 dc_build:
-	docker-compose -f ./docker/docker-compose.yml build
+	docker build -t php-fpm -f ./docker/php-fpm/Dockerfile .
+	docker build -t nginx -f ./docker/nginx/Dockerfile ./docker/nginx
+	docker build -t postgres -f ./docker/postgres/Dockerfile ./docker/postgres
 
 dc_start:
-	docker-compose -f ./docker/docker-compose.yml start
+	cd ./docker && docker-compose start
 
 dc_stop:
-	docker-compose -f ./docker/docker-compose.yml stop
+	cd ./docker && docker-compose stop
 
 dc_up:
-	docker-compose -f ./docker/docker-compose.yml up -d --remove-orphans
+	cd ./docker && docker-compose up -d --remove-orphans
 
 dc_ps:
-	docker-compose -f ./docker/docker-compose.yml ps
+	cd ./docker && docker-compose ps
 
 dc_logs:
-	docker-compose -f ./docker/docker-compose.yml logs -f
+	cd ./docker && docker-compose logs -f
 
 dc_down:
-	docker-compose -f ./docker/docker-compose.yml down -v --rmi=all --remove-orphans
+	cd ./docker && docker-compose down -v --rmi=all --remove-orphans
 
 
 ##################
@@ -29,4 +31,4 @@ dc_down:
 ##################
 
 app_bash:
-	docker-compose -f ./docker/docker-compose.yml exec -u www-data php-fpm bash
+	cd ./docker && docker-compose exec -u www-data php-fpm bash

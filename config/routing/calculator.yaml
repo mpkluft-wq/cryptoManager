@@ -1,0 +1,4 @@
+calculate-grid-buy:
+  path: /calculator/calculate-grid-buy
+  methods: [GET, POST]
+  controller: App\Shared\Infrastructure\Controller\Calculator\CalculateGridController

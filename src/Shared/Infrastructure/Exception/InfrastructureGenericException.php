@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Exception;
-
-use Symfony\Component\Messenger\Exception\RecoverableExceptionInterface;
+namespace App\Shared\Infrastructure\Exception;
 
 /**
  * Base infrastructure error exception (database down etc.)
  */
-class InfrastructureGenericException extends \RuntimeException implements RecoverableExceptionInterface
+class InfrastructureGenericException extends \RuntimeException
 {
 }

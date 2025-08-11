@@ -45,3 +45,28 @@
 
 - `updated_at` - timestamp(0) without time zone default null \
   Дата и время последнего обновления записи.
+
+## crypto_portfolio
+
+Таблица хранит записи портфеля по конкретным криптоактивам.
+
+- `id` - int not null \
+  Уникальный идентификатор записи.
+
+- `crypto_currency_id` - int not null UNIQUE (FK -> crypto_currency.id) \
+  Ссылка на криптовалюту из таблицы crypto_currency. Поле уникально: одна запись портфеля на одну криптовалюту.
+
+- `amount` - DECIMAL(36, 18) not null \
+  Количество/объём актива.
+
+- `average_price` - DECIMAL(36, 18) not null \
+  Средняя цена покупки/входа по активу.
+
+- `current_price` - DECIMAL(36, 18) not null \
+  Текущая рыночная цена актива.
+
+- `created_at` - timestamp(0) without time zone not null \
+  Дата создания записи. Устанавливается на уровне сущности (Doctrine prePersist).
+
+- `updated_at` - timestamp(0) without time zone default null \
+  Дата последнего обновления записи. Обновляется на уровне сущности (Doctrine preUpdate).

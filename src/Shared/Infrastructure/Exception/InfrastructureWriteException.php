@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Exception;
+namespace App\Shared\Infrastructure\Exception;
 
 /**
  * Бросается при невозможности записать данные в инфраструктуру

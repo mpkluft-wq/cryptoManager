@@ -1,5 +1,114 @@
 {% extends "default_layout/main_layout.html.twig" %}
 
 {% block body %}
-exchange list page
+<div class="container mt-4">
+    <h1>Список бирж</h1>
+    
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }} alert-dismissible fade show mt-3" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    
+    <div class="table-responsive mt-4">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Название</th>
+                    <th>API URL</th>
+                    <th>Web URL</th>
+                    <th>Лимит запросов</th>
+                    <th>Комиссии</th>
+                    <th>Активна</th>
+                    <th>Дата создания</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for exchange in exchanges %}
+                    <tr>
+                        <td>{{ exchange.id }}</td>
+                        <td>{{ exchange.name }}</td>
+                        <td>{{ exchange.apiUrl }}</td>
+                        <td>{{ exchange.webUrl }}</td>
+                        <td>{{ exchange.rateLimit }}</td>
+                        <td>{{ exchange.tradingFees }}</td>
+                        <td>{{ exchange.isEnabled ? 'Да' : 'Нет' }}</td>
+                        <td>{{ exchange.createdAt|date('d.m.Y H:i') }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center">Биржи не найдены</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if totalPages > 1 %}
+    <nav aria-label="Навигация по страницам">
+        <ul class="pagination justify-content-center mt-4">
+            {% for i in 1..totalPages %}
+                <li class="page-item {{ currentPage == i ? 'active' : '' }}">
+                    <a class="page-link" href="{{ path('exchange_list', {'page': i}) }}">{{ i }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    <div class="card mt-5 mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Добавить новую биржу</h3>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{{ path('exchange_list') }}">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="name">Название</label>
+                        <input type="text" class="form-control" id="name" name="name" required maxlength="255">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="rateLimit">Лимит запросов</label>
+                        <input type="number" class="form-control" id="rateLimit" name="rateLimit" required min="1">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="apiUrl">API URL</label>
+                        <input type="url" class="form-control" id="apiUrl" name="apiUrl" required maxlength="255">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="webUrl">Web URL</label>
+                        <input type="url" class="form-control" id="webUrl" name="webUrl" required maxlength="255">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="tradingFees">Комиссии</label>
+                        <input type="text" class="form-control" id="tradingFees" name="tradingFees" required maxlength="20">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="logoPath">Путь к логотипу</label>
+                        <input type="text" class="form-control" id="logoPath" name="logoPath" maxlength="255">
+                    </div>
+                </div>
+                
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="isEnabled" name="isEnabled" value="1" checked>
+                    <label class="form-check-label" for="isEnabled">Активна</label>
+                </div>
+                
+                <button type="submit" class="btn btn-success">Добавить биржу</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
